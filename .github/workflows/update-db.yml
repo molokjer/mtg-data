@@ -1,0 +1,84 @@
+﻿name: Actualizar Base de Datos MTG Semanalmente
+
+on:
+  schedule:
+    # Ejecuta cada domingo a las 3 AM UTC (≈ sábado noche en España)
+    - cron: '0 3 * * 0'
+  workflow_dispatch:  # Permite ejecutar manualmente desde GitHub
+
+jobs:
+  update-db:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Descargar scryfall-all-cards.json.gz
+        run: |
+          echo "📥 Descargando base de datos completa..."
+          wget -q https://archive.scryfall.com/json/scryfall-all-cards.json.gz
+          echo "📦 Descomprimiendo..."
+          gzip -d scryfall-all-cards.json.gz
+
+      - name: Procesar JSON y filtrar cartas valiosas
+        run: |
+          echo "🔍 Filtrando cartas con precio > \$5..."
+          python <<EOF
+          import json
+
+          # Cargar todas las cartas
+          with open('scryfall-all-cards.json', 'r', encoding='utf-8') as f:
+              cards = json.load(f)
+
+          # Filtrar por precio y calidad
+          filtered = []
+          for card in cards:
+              usd = card.get("prices", {}).get("usd")
+              if not usd:
+                  continue
+              try:
+                  price = float(usd)
+                  if price < 5:
+                      continue
+              except:
+                  continue
+
+              filtered.append({
+                  "name": card["name"],
+                  "set": card["set"],
+                  "set_name": card["set_name"],
+                  "price_usd": round(price, 2),
+                  "image_url": card.get("image_uris", {}).get("normal"),
+                  "rarity": card["rarity"],
+                  "oracle_text": card.get("oracle_text", "")
+              })
+
+          # Guardar db_full.json
+          output = {
+              "last_updated": __import__('datetime').datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
+              "total_cards": len(filtered),
+              "cards": filtered
+          }
+
+          with open('data/db_full.json', 'w', encoding='utf-8') as f:
+              json.dump(output, f, indent=2, ensure_ascii=False)
+
+          print(f"✅ {len(filtered)} cartas guardadas en data/db_full.json")
+          EOF
+
+      - name: Subir cambios a GitHub
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Añadir solo si hay cambios
+          git add data/db_full.json
+          if git diff-index --quiet HEAD; then
+            echo "🟢 No hay cambios. La base de datos ya está actualizada."
+          else
+            git commit -m "🔄 Actualización semanal automática de precios \$(date)"
+            git push origin main
+            echo "🚀 ¡Base de datos actualizada!"
+          fi
