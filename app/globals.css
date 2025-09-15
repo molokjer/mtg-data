@@ -1,0 +1,155 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+body {
+  font-family: var(--font-dm-sans);
+}
+:root {
+  /* Trade Republic + Chrome Hearts Design Tokens */
+  --background: #ffffff; /* Pure white background for Trade Republic minimalism */
+  --foreground: #1f2937; /* Dark gray text for excellent readability */
+  --card: #f1f5f9; /* Soft light gray cards with subtle elevation */
+  --card-foreground: #1f2937; /* Dark text on cards */
+  --popover: #ffffff; /* White popover */
+  --popover-foreground: #1f2937; /* Dark text */
+  --primary: #1f2937; /* Dark gray primary for sophisticated look */
+  --primary-foreground: #ffffff; /* White text on primary */
+  --secondary: #6b7280; /* Medium gray for secondary elements */
+  --secondary-foreground: #ffffff; /* White text on secondary */
+  --muted: #f1f5f9; /* Light gray for muted sections */
+  --muted-foreground: #6b7280; /* Medium gray text */
+  --accent: #8b5cf6; /* Luxurious violet for Chrome Hearts luxury touch */
+  --accent-foreground: #ffffff; /* White text on accent */
+  --destructive: #be123c; /* Deep red for errors */
+  --destructive-foreground: #ffffff; /* White text on destructive */
+  --border: #e5e7eb; /* Light border */
+  --input: #ffffff; /* White input background */
+  --ring: rgba(139, 92, 246, 0.5); /* Violet focus ring */
+  --chart-1: #8b5cf6; /* Violet for charts */
+  --chart-2: #6b7280; /* Gray for charts */
+  --chart-3: #1f2937; /* Dark gray for charts */
+  --chart-4: #f1f5f9; /* Light gray for charts */
+  --chart-5: #be123c; /* Red for charts */
+  --radius: 0.75rem; /* Slightly rounded for premium feel */
+  --sidebar: #1f2937; /* Dark sidebar */
+  --sidebar-foreground: #ffffff; /* White sidebar text */
+  --sidebar-primary: #8b5cf6; /* Violet sidebar highlights */
+  --sidebar-primary-foreground: #ffffff; /* White text */
+  --sidebar-accent: #6b7280; /* Gray sidebar accent */
+  --sidebar-accent-foreground: #ffffff; /* White text */
+  --sidebar-border: #e5e7eb; /* Light sidebar border */
+  --sidebar-ring: rgba(139, 92, 246, 0.3); /* Violet sidebar ring */
+
+  /* Chrome Hearts luxury additions */
+  --metallic: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 50%, #c0c0c0 100%); /* Silver metallic gradient */
+  --gothic-accent: #2d1b69; /* Deep purple for gothic touches */
+  --luxury-shadow: 0 8px 32px rgba(139, 92, 246, 0.12); /* Luxury shadow with violet tint */
+}
+
+.dark {
+  --background: #0f0f0f; /* Rich black background */
+  --foreground: #f8fafc; /* Off-white text */
+  --card: #1a1a1a; /* Dark cards */
+  --card-foreground: #f8fafc; /* Light text on cards */
+  --popover: #0f0f0f; /* Dark popover */
+  --popover-foreground: #f8fafc; /* Light text */
+  --primary: #8b5cf6; /* Violet primary in dark mode */
+  --primary-foreground: #ffffff; /* White text on primary */
+  --secondary: #6b7280; /* Keep gray secondary */
+  --secondary-foreground: #f8fafc; /* Light text on secondary */
+  --muted: #262626; /* Dark muted */
+  --muted-foreground: #9ca3af; /* Light gray text */
+  --accent: #a78bfa; /* Lighter violet for dark mode */
+  --accent-foreground: #0f0f0f; /* Dark text on accent */
+  --destructive: #ef4444; /* Brighter red for dark mode */
+  --destructive-foreground: #ffffff; /* White text on destructive */
+  --border: #374151; /* Dark border */
+  --input: #1a1a1a; /* Dark input */
+  --ring: rgba(167, 139, 250, 0.5); /* Light violet ring */
+  --chart-1: #a78bfa; /* Light violet for charts */
+  --chart-2: #9ca3af; /* Light gray for charts */
+  --chart-3: #f8fafc; /* Light for charts */
+  --chart-4: #374151; /* Dark gray for charts */
+  --chart-5: #ef4444; /* Red for charts */
+  --sidebar: #0f0f0f; /* Dark sidebar */
+  --sidebar-foreground: #f8fafc; /* Light sidebar text */
+  --sidebar-primary: #a78bfa; /* Light violet sidebar */
+  --sidebar-primary-foreground: #0f0f0f; /* Dark text */
+  --sidebar-accent: #6b7280; /* Gray sidebar accent */
+  --sidebar-accent-foreground: #f8fafc; /* Light text */
+  --sidebar-border: #374151; /* Dark sidebar border */
+  --sidebar-ring: rgba(167, 139, 250, 0.3); /* Light violet ring */
+
+  /* Dark mode luxury additions */
+  --metallic: linear-gradient(135deg, #4a5568 0%, #718096 50%, #4a5568 100%); /* Dark metallic */
+  --gothic-accent: #553c9a; /* Lighter gothic purple for dark mode */
+  --luxury-shadow: 0 8px 32px rgba(167, 139, 250, 0.2); /* Enhanced luxury shadow */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+/* Chrome Hearts luxury touches */
+.luxury-card {
+  box-shadow: var(--luxury-shadow);
+  background: var(--card);
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+.metallic-accent {
+  background: var(--metallic);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gothic-border {
+  border-image: linear-gradient(45deg, var(--gothic-accent), transparent, var(--gothic-accent)) 1;
+}
