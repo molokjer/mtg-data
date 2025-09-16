@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:8919f1f964d9abb46a66c3b1a051f1af3c0b88d7a496c53f1cf26b34d6fcccbb
-size 305
+﻿{
+  "name": "mtginvestmentanalyzer3",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^14",
+    "react": "^18",
+    "react-dom": "^18",
+    "openai": "^4",
+    "recharts": "^2.0.0"
+  }
+}
