@@ -14,7 +14,7 @@ async function fetchFromScryfall(name: string): Promise<number | null> {
 
     const data = await res.json()
 
-    // Prioriza eur_mkm (CardMarket) → más estable
+    // Prioriza EUR-MKM (más estable), convierte a USD
     if (data.prices?.eur_mkm) return parseFloat(data.prices.eur_mkm) * 1.1
     if (data.prices?.usd) return parseFloat(data.prices.usd)
 
@@ -33,7 +33,6 @@ async function fetchFromLocalFallback(name: string): Promise<number | null> {
     const res = await fetch('/data/fallback-prices.json')
     const data: Record<string, number> = await res.json()
 
-    // Busca coincidencia parcial
     const clave = Object.keys(data).find(k => 
       k.toLowerCase().includes(name.toLowerCase()) ||
       name.toLowerCase().includes(k.toLowerCase())
@@ -54,18 +53,20 @@ export async function getBestPrice(name: string): Promise<number> {
   const cached = cache.get(key)
   if (cached) return cached
 
+  let price: number | null = null
+
   // Fuente 1: Scryfall
-  const price1 = await fetchFromScryfall(name)
-  if (typeof price1 === 'number' && !isNaN(price1) && price1 > 0.5) {
-    cache.set(key, price1)
-    return price1
+  price = await fetchFromScryfall(name)
+  if (typeof price === 'number' && !isNaN(price) && price > 0.5) {
+    cache.set(key, price)
+    return price
   }
 
   // Fuente 2: Fallback local
-  const price2 = await fetchFromLocalFallback(name)
-  if (typeof price2 === 'number' && !isNaN(price2) && price2 > 0.5) {
-    cache.set(key, price2)
-    return price2
+  price = await fetchFromLocalFallback(name)
+  if (typeof price === 'number' && !isNaN(price) && price > 0.5) {
+    cache.set(key, price)
+    return price
   }
 
   // Último fallback

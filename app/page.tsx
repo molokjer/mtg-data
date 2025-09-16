@@ -1,4 +1,3 @@
-// app/page.tsx
 "use client"
 
 import { useState, useEffect } from "react"
@@ -6,30 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import {
-  Search,
-  TrendingUp,
-  Home,
-  Briefcase,
-  BarChart3,
-  User,
-  Moon,
-  Sun,
-  Zap,
-  ArrowUpRight,
-  Minus,
-  Crown,
-  Sparkles,
-} from "lucide-react"
+import { Search, Home, Briefcase, BarChart3, User, Moon, Sun, ArrowUpRight, Minus, Crown } from "lucide-react"
 import { useTheme } from "next-themes"
 import { fetchCard, searchCards, MTGCard, analizarConIA } from "@/lib/api"
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/Chart"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/Chart"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import Link from "next/link"
 
 export default function MTGInvestmentApp() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -111,20 +92,18 @@ export default function MTGInvestmentApp() {
           <h2 className="text-2xl font-bold text-foreground">Resultados para "{searchQuery}"</h2>
           <div className="space-y-4">
             {allCards.map((card) => (
-              <Card 
-                key={`${card.name}-${card.set}`} 
-                className="luxury-card rounded-3xl border-0 hover:shadow-xl cursor-pointer" 
-                onClick={() => setSelectedCard(card)}
-              >
-                <CardContent className="p-6 flex items-center space-x-4">
-                  <img src={card.imageUrl} alt={card.name} className="w-16 h-24 object-cover rounded-lg" />
-                  <div className="flex-1">
-                    <h3 className="font-bold text-foreground">{card.name}</h3>
-                    <p className="text-sm text-muted-foreground">{card.set}</p>
-                    <p className="text-lg font-bold text-foreground">${card.price.toFixed(2)}</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <Link key={`${card.name}-${card.set}`} href={`/card/${encodeURIComponent(card.name)}`}>
+                <Card className="luxury-card rounded-3xl border-0 hover:shadow-xl cursor-pointer">
+                  <CardContent className="p-6 flex items-center space-x-4">
+                    <img src={card.imageUrl} alt={card.name} className="w-16 h-24 object-cover rounded-lg" />
+                    <div className="flex-1">
+                      <h3 className="font-bold text-foreground">{card.name}</h3>
+                      <p className="text-sm text-muted-foreground">{card.set}</p>
+                      <p className="text-lg font-bold text-foreground">${card.price.toFixed(2)}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
           {hasMore && (
@@ -155,14 +134,14 @@ export default function MTGInvestmentApp() {
                 </div>
               </div>
 
-              {/* 🔹 Gráfico */}
+              {/* 🔹 Gráfico Mejorado: Real + Simulado */}
               <ChartContainer
                 config={{
                   price: { label: "Precio", color: "#00FFCC" },
                 }}
                 className="h-80 w-full mt-6"
               >
-                <AreaChart data={selectedCard.pricesHistory}>
+                <AreaChart data={generarDatosHibridos(selectedCard.pricesHistory, selectedCard.priceUsd!)}>
                   <CartesianGrid vertical={false} strokeDasharray="3 3" opacity={0.2} />
                   <XAxis
                     dataKey="date"
@@ -304,6 +283,29 @@ export default function MTGInvestmentApp() {
       default:
         return null
     }
+  }
+
+  // Función para generar datos híbridos: reales + simulados
+  function generarDatosHibridos(historialReal: { date: string; price: number }[], precioActual: number): { date: string; price: number }[] {
+    const datos = [...historialReal];
+
+    while (datos.length < 15) {
+      const ultimo = datos[datos.length - 1];
+      const fecha = new Date(ultimo.date);
+      fecha.setDate(fecha.getDate() + 2);
+      const variacion = (Math.random() - 0.5) * 0.1;
+      const nuevoPrecio = ultimo.price * (1 + variacion);
+      datos.push({
+        date: fecha.toISOString().split('T')[0],
+        price: parseFloat(nuevoPrecio.toFixed(2))
+      });
+    }
+
+    const ajuste = precioActual / datos[datos.length - 1].price;
+    return datos.map(d => ({
+      date: d.date,
+      price: parseFloat((d.price * ajuste).toFixed(2))
+    }));
   }
 
   return (

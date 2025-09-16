@@ -1,11 +1,10 @@
 // app/api/analizar/route.ts
+
 import { NextRequest, NextResponse } from 'next/server'
 import { generarAnalisisIA } from '@/lib/openai'
 
 export async function POST(req: NextRequest) {
   console.log('🔍 /api/analizar recibió una solicitud')
-
-  // Verifica que la clave esté disponible
   console.log('🔑 OPENAI_API_KEY presente:', !!process.env.OPENAI_API_KEY)
 
   try {

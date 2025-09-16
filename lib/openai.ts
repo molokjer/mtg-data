@@ -1,4 +1,5 @@
 ﻿// lib/openai.ts
+
 import OpenAI from 'openai'
 
 const openai = new OpenAI({
@@ -6,21 +7,19 @@ const openai = new OpenAI({
 })
 
 export async function generarAnalisisIA(card: any): Promise<string> {
-  // Validación segura de datos
   const name = card.name || 'Carta desconocida'
   const set = card.set || 'Edición no disponible'
   const price = typeof card.price === 'number' ? card.price : 0
   const change = typeof card.change === 'number' ? card.change : 0
   const rsi = typeof card.rsi === 'number' ? Math.round(card.rsi) : 50
-  const trend = card.trend || 'lateral'
+  const trend = card.trend || (change > 0 ? 'alcista' : change < 0 ? 'bajista' : 'lateral')
   const volatility = card.volatility || 'Media'
   const volume = card.volume || '1M'
   const isMythic = card.isPremium === true
 
-  // Cálculos profesionales
   const soporte = (price * 0.9).toFixed(2)
   const resistencia = (price * 1.15).toFixed(2)
-  const proyeccion30d = ((change * 1.8) + (Math.random() * 2)).toFixed(1)
+  const proyeccion30d = ((Math.abs(change) * 1.8) + (Math.random() * 2)).toFixed(1)
 
   const prompt = `
 Actúa como un analista financiero senior especializado en activos coleccionables.
@@ -51,12 +50,10 @@ Sé conciso. Máximo 5 líneas.`
     })
 
     if (!response.choices?.[0]?.message?.content) {
-      return fallBackAnalysis(name, set, price, rsi, soporte, resistencia)
+      throw new Error('Sin contenido en respuesta')
     }
 
     const content = response.choices[0].message.content.trim()
-    
-    // Asegurar solo 5 líneas
     const lines = content.split('\n').slice(0, 5)
     return lines.join('\n')
   } catch (error: any) {
