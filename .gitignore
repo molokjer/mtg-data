@@ -1,6 +1,30 @@
-﻿.env
+﻿# Archivos sensibles
+.env
 .env.local
+.env.production
+
+# Carpetas generadas por Node.js y Next.js
 node_modules/
 .next
 out/
-vercel
+build/
+dist/
+.vercel
+
+# Logs y archivos temporales
+*.log
+.cache/
+.DS_Store
+Thumbs.db
+
+# Evita problemas con Git LFS
+!package.json
+!*.js
+!*.ts
+!*.tsx
+!*.json
+
+# Archivos de lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
