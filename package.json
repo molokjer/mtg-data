@@ -9,6 +9,7 @@
     "postinstall": "echo '✅ Postinstall: Ignorando node-domexception (no crítico)'"
   },
   "dependencies": {
+    "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-slot": "^1.2.3",
     "@types/node": "^24.5.1",
     "@types/react": "^19.1.13",
