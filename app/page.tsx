@@ -343,4 +343,4 @@ export default function MTGInvestmentApp() {
       </div>
     </div>
   )
-}app/page.tsx
+}
