@@ -25,6 +25,5 @@ Thumbs.db
 !*.json
 
 # Archivos de lock (✅ DEBEN SUBIRSE A GIT)
-# ❌ Eliminamos package-lock.json del .gitignore
 yarn.lock
 pnpm-lock.yaml
