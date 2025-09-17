@@ -2,15 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  // Si usas imágenes grandes, desactiva LFS aquí
+  // Si usas imágenes externas (como Scryfall), descomenta esto:
   // images: {
-  //   remotePatterns: [
-  //     {
-  //       protocol: 'https',
-  //       hostname: 'img.scryfall.com',
-  //       pathname: '/**',
-  //     },
-  //   ],
+  //   domains: ['img.scryfall.com'],
   // },
 }
 
